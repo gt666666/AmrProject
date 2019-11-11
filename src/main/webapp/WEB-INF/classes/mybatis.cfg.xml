@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration   
+    PUBLIC "-//mybatis.org//DTD Config 3.0//EN"   
+    "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+	<settings>
+		<!-- 启用二级缓存的配置 -->
+		<setting name="cacheEnabled" value="true" />
+	</settings>
+	<typeAliases>
+		<typeAlias type="cn.mldn.amr.vo.Emp" alias="Emp" />
+		<typeAlias type="cn.mldn.amr.vo.Dept" alias="Dept" />
+		<typeAlias type="cn.mldn.amr.vo.Groups" alias="Groups" />
+		<typeAlias type="cn.mldn.amr.vo.Action" alias="Action" />
+		<typeAlias type="cn.mldn.amr.vo.Level" alias="Level" />
+		<typeAlias type="cn.mldn.amr.vo.Type" alias="Type" />
+		<typeAlias type="cn.mldn.amr.vo.Subtype" alias="Subtype" />
+		<typeAlias type="cn.mldn.amr.vo.Details" alias="Details" />
+		<typeAlias type="cn.mldn.amr.vo.Res" alias="Res" />
+		<typeAlias type="cn.mldn.amr.vo.Purchase" alias="Purchase" />
+		<typeAlias type="cn.mldn.amr.vo.Take" alias="Take" />
+	</typeAliases>
+	<mappers>
+		<mapper resource="cn/mldn/amr/vo/mapping/Emp.xml" />
+		<mapper resource="cn/mldn/amr/vo/mapping/Type.xml" />
+		<mapper resource="cn/mldn/amr/vo/mapping/Level.xml" />
+		<mapper resource="cn/mldn/amr/vo/mapping/Dept.xml" />
+		<mapper resource="cn/mldn/amr/vo/mapping/Groups.xml" />
+		<mapper resource="cn/mldn/amr/vo/mapping/Action.xml" />
+		<mapper resource="cn/mldn/amr/vo/mapping/Subtype.xml" />
+		<mapper resource="cn/mldn/amr/vo/mapping/Details.xml" />
+		<mapper resource="cn/mldn/amr/vo/mapping/Res.xml" />
+		<mapper resource="cn/mldn/amr/vo/mapping/Purchase.xml" />
+		<mapper resource="cn/mldn/amr/vo/mapping/Take.xml" />
+	</mappers>
+</configuration>

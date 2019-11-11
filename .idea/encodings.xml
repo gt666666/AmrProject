@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="Encoding" native2AsciiForPropertiesFiles="true" defaultCharsetForPropertiesFiles="GBK">
+    <file url="file://$PROJECT_DIR$" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/main/java/cn/mldn/amr/action/abs/AbstractAction.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/main/java/cn/mldn/amr/filter/LoginFilter.java" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/src/main/java/cn/mldn/util/MD5Code.java" charset="GBK" />
+    <file url="PROJECT" charset="GBK" />
+  </component>
+</project>

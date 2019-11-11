@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.mldn.amr.mapping.ActionNS">
+	<resultMap type="Action" id="ActionResultMap">
+		<id property="actid" column="actid" />
+		<result property="title" column="title" />
+		<result property="url" column="url" />
+		<result property="sflag" column="sflag" />
+		<association property="groups" column="gid" 
+			resultMap="cn.mldn.amr.mapping.GroupsNS.GroupsResultMap" />
+	</resultMap>
+	<select id="findAllByGroups" parameterType="Integer" resultMap="ActionResultMap">
+		SELECT actid,gid,title,url,sflag FROM action WHERE gid=#{pgid}
+	</select> 
+	<select id="findByIdAndDept" parameterType="java.util.Map" resultMap="ActionResultMap">
+		SELECT actid,gid,title,url,sflag FROM action
+		WHERE actid=#{actid} AND gid IN (
+			SELECT gid FROM dept_groups WHERE did=#{did})
+	</select>
+</mapper> 

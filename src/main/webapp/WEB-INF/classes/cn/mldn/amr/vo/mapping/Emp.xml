@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.mldn.amr.mapping.EmpNS">
+	<resultMap type="Emp" id="EmpResultMap">
+		<id property="eid" column="eid" />
+		<result property="name" column="name" />
+		<result property="password" column="password" />
+		<result property="phone" column="phone" />
+		<result property="salary" column="salary" />
+		<result property="note" column="note" />
+		<result property="aflag" column="aflag" />
+		<result property="sex" column="sex" />
+		<result property="photo" column="photo" />
+		<association property="dept" column="did"
+			resultMap="cn.mldn.amr.mapping.DeptNS.DeptResultMap" />
+		<association property="level" column="lid"
+			resultMap="cn.mldn.amr.mapping.LevelNS.LevelResultMap" />
+	</resultMap>
+	<insert id="doCreate" parameterType="Emp">
+		INSERT INTO emp(eid,did,lid,heid,name,password,phone,salary,note,aflag,sex,photo) 
+		VALUES (#{eid},#{dept.did},#{level.lid},#{heid},#{name},#{password},#{phone},#{salary},#{note},#{aflag},#{sex},#{photo}) ;
+	</insert>
+	<select id="findAllAdmin" resultMap="EmpResultMap" parameterType="java.util.Map">
+		SELECT eid,did,lid,heid,name,password,phone,salary,note,aflag,sex,photo
+		FROM emp WHERE aflag IN (1,2)
+		<if test="keyWord != null"> 
+			AND ${column} LIKE #{keyWord}
+		</if>
+		LIMIT #{start},#{lineSize}  ; 
+	</select>
+	<select id="getAllAdminCount" parameterType="java.util.Map" resultType="Integer">
+		SELECT COUNT(*) FROM emp WHERE aflag IN (1,2)
+		<if test="keyWord != null"> 
+			AND ${column} LIKE #{keyWord}
+		</if> 
+	</select>  
+	
+	<select id="findAllEmp" resultMap="EmpResultMap" parameterType="java.util.Map">
+		SELECT eid,did,lid,heid,name,password,phone,salary,note,aflag,sex,photo
+		FROM emp WHERE aflag=0
+		<if test="keyWord != null"> 
+			AND ${column} LIKE #{keyWord}
+		</if>
+		LIMIT #{start},#{lineSize}  ; 
+	</select>
+	<select id="getAllEmpCount" parameterType="java.util.Map" resultType="Integer">
+		SELECT COUNT(*) FROM emp WHERE aflag=0
+		<if test="keyWord != null"> 
+			AND ${column} LIKE #{keyWord}
+		</if> 
+	</select>
+
+	<select id="findLogin" parameterType="Emp" resultMap="EmpResultMap">
+		SELECT eid,name,password,aflag,photo,did,lid FROM emp WHERE eid=#{eid} AND password=#{password} ;
+	</select>
+	<select id="findById" parameterType="Integer" resultMap="EmpResultMap">
+		SELECT eid,did,lid,heid,name,password,phone,salary,note,aflag,sex,photo
+		FROM emp WHERE eid=#{peid} ;
+	</select>
+	<update id="doUpdate" parameterType="Emp">
+		UPDATE emp 
+		<set>
+			did=#{dept.did} ,lid=#{level.lid},name=#{name},
+			<if test="password != null"> 
+				password=#{password} ,
+			</if>
+			phone=#{phone},salary=#{salary},note=#{note},sex=#{sex},photo=#{photo}
+		</set>
+		WHERE eid=#{eid}
+	</update> 
+</mapper>

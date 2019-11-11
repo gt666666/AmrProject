@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.mldn.amr.mapping.DeptNS">
+	<resultMap type="Dept" id="DeptResultMap">
+		<id property="did" column="did" />
+		<result property="title" column="title" />
+		<result property="sflag" column="sflag" />
+		<collection property="allEmps" javaType="java.util.List" ofType="Emp"/>
+		<collection property="allGroups" javaType="java.util.List" ofType="Groups"/>
+	</resultMap>
+	<select id="findAll" resultMap="DeptResultMap">
+		SELECT did,title,sflag FROM dept ;
+	</select>
+	<select id="findAllBySflag" resultMap="DeptResultMap" parameterType="Integer">
+		SELECT did,title,sflag FROM dept WHERE sflag=#{sflag} ;
+	</select>
+	<update id="doUpdate" parameterType="Dept">
+		UPDATE dept SET title=#{title} where did=#{did} ;
+	</update>
+</mapper>

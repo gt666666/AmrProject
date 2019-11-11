@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.mldn.amr.mapping.DetailsNS">
+	<resultMap type="Details" id="DetailsResultMap">
+		<id property="did" column="did" />
+		<result property="title" column="title" />
+		<result property="price" column="price" />
+		<result property="amount" column="amount" />
+		<result property="photo" column="photo" />
+		<result property="rflag" column="rflag" />
+		<association property="type" column="tid" resultMap="cn.mldn.amr.mapping.TypeNS.TypeResultMap"/>
+		<association property="subtype" column="stid" resultMap="cn.mldn.amr.mapping.SubtypeNS.SubtypeResultMap"/>
+		<association property="res" column="rid" resultMap="cn.mldn.amr.mapping.ResNS.ResResultMap"/>
+		<association property="emp" column="eid" resultMap="cn.mldn.amr.mapping.EmpNS.EmpResultMap"/>
+	</resultMap>
+	<insert id="doCreate" parameterType="Details">
+		INSERT INTO details(tid,stid,eid,title,price,amount,photo,rflag,rid) 
+		VALUES (#{type.tid},#{subtype.stid},#{emp.eid},#{title},#{price},#{amount},#{photo},#{rflag},#{res.rid}) ;
+	</insert>
+	<select id="findByIdAndPrebuy" parameterType="java.util.Map" resultMap="DetailsResultMap">
+		SELECT did,tid,stid,eid,pid,rid,title,price,amount,photo,rflag
+		FROM details WHERE did=#{pdid} AND eid=#{eid} AND pid IS NULL AND rid IS NULL
+	</select>
+	
+	<update id="doUpdateAppendAmount" parameterType="int">
+		UPDATE details SET amount=amount+1 WHERE did=#{did}
+	</update>
+	
+	<select id="findByDetailsExists" parameterType="java.util.Map" resultMap="DetailsResultMap">
+		SELECT did FROM details WHERE pid IS NULL AND eid=#{eid} AND rid=#{rid}
+	</select>
+	
+	<update id="doUpdatePrebuy" parameterType="Details">
+		UPDATE details SET tid=#{type.tid},stid=#{subtype.stid},title=#{title},
+		price=#{price},photo=#{photo} WHERE did=#{did} AND eid=#{emp.eid}  AND  pid IS NULL AND rid IS NULL
+	</update>
+	
+	<update id="doUpdateByPurchase" parameterType="java.util.Map">
+		UPDATE details SET pid=#{pid} WHERE eid=#{eid} AND pid IS NULL ;
+	</update>
+	
+	<select id="findAllByPruchase" parameterType="int" resultMap="DetailsResultMap">
+		SELECT did,tid,stid,eid,pid,rid,title,price,amount,photo,rflag
+		FROM details WHERE pid=#{pid} ;
+	</select>
+	
+	<select id="findAllPrebuy" parameterType="int" resultMap="DetailsResultMap">
+		SELECT did,tid,stid,eid,pid,rid,title,price,amount,photo,rflag
+		FROM details WHERE pid IS NULL AND eid=#{eid} ;
+	</select>
+	
+	<select id="findAllByPhoto" parameterType="Integer" resultMap="DetailsResultMap">
+		SELECT did,photo,eid FROM details 
+		<where>
+			did IN
+			<foreach collection="array" open="(" close=")" separator="," item="ele">
+				#{ele}
+			</foreach> 
+			AND rid IS NULL
+		</where>
+	</select> 
+	
+	<update id="doUpdateAmount" parameterType="Details">
+		UPDATE details SET amount=#{amount} WHERE did=#{did} AND eid=#{emp.eid} 
+	</update>
+	<delete id="doRemoveBatchByAmount" parameterType="Integer">
+		DELETE FROM details WHERE did IN
+		<foreach collection="array" open="(" close=")" separator="," item="ele">
+			#{ele}
+		</foreach> 
+	</delete> 
+</mapper>

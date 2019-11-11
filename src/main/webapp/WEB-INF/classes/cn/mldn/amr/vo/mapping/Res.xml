@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.mldn.amr.mapping.ResNS">
+	<resultMap type="Res" id="ResResultMap">
+		<id property="rid" column="rid" />
+		<result property="title" column="title" />
+		<result property="price" column="price" />
+		<result property="amount" column="amount" />
+		<result property="indate" column="indate" />
+		<result property="photo" column="photo" />
+		<result property="rflag" column="rflag" />
+		<association property="type" column="tid" resultMap="cn.mldn.amr.mapping.TypeNS.TypeResultMap"/>
+		<association property="subtype" column="stid" resultMap="cn.mldn.amr.mapping.SubtypeNS.SubtypeResultMap"/>
+	</resultMap>
+	<select id="findById" parameterType="Integer" resultMap="ResResultMap">
+		SELECT rid,tid,stid,title,price,indate,photo,rflag,amount 
+		FROM res WHERE rid=#{rid}
+	</select>
+	<insert id="doCreate" parameterType="Res">
+		INSERT INTO res(tid,stid,title,price,indate,photo,rflag,amount) 
+		VALUES (#{type.tid},#{subtype.stid},#{title},#{price},#{indate},#{photo},#{rflag},#{amount}) ;
+	</insert>
+	
+	<select id="findAllByRids" parameterType="Integer" resultMap="ResResultMap">
+		SELECT rid,tid,stid,title,price,indate,photo,rflag,amount 
+		FROM res
+		<where>
+			rid IN 
+			<foreach collection="array" open="(" close=")" separator="," item="ele">
+				#{ele}
+			</foreach>
+		</where>
+	</select>
+	
+	<select id="findAllSplit" parameterType="java.util.Map" resultMap="ResResultMap">
+		SELECT rid,tid,stid,title,price,indate,photo,rflag,amount 
+		FROM res
+		<if test="keyWord != null">
+			WHERE ${column} LIKE #{keyWord}
+		</if>
+		ORDER BY indate 
+		LIMIT #{start},#{lineSize}
+	</select>
+	<select id="getAllCount" parameterType="java.util.Map" resultType="Integer">
+		SELECT COUNT(*) FROM res
+		<if test="keyWord != null">
+			WHERE ${column} LIKE #{keyWord}
+		</if>
+	</select>
+	<update id="doUpdateAmount" parameterType="java.util.Map">
+		UPDATE res SET amount=amount+#{amount} WHERE rid=#{rid}
+	</update> 
+</mapper> 

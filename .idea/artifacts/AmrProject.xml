@@ -1,0 +1,9 @@
+<component name="ArtifactManager">
+  <artifact type="war" name="AmrProject">
+    <output-path>$PROJECT_DIR$/out/artifacts/AmrProject</output-path>
+    <root id="archive" name="AmrProject.war">
+      <element id="artifact" artifact-name="AmrProject:war exploded" />
+      <element id="dir-copy" path="$PROJECT_DIR$/src/main/webapp" />
+    </root>
+  </artifact>
+</component>

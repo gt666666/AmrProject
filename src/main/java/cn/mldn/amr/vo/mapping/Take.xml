@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.mldn.amr.mapping.TakeNS">
+	<resultMap type="Take" id="TakeResultMap">
+		<id property="tkid" column="tkid" />
+		<result property="geid" column="geid" />
+		<result property="beid" column="beid" />
+		<result property="gdate" column="gdate" />
+		<result property="rdate" column="rdate" />
+		<result property="note" column="note" />
+		<result property="amount" column="amount" />
+		<result property="status" column="status" />
+		<association property="res" column="rid"
+			resultMap="cn.mldn.amr.mapping.ResNS.ResResultMap" />
+	</resultMap> 
+	
+	<select id="findAllByEmpUnGet" parameterType="Integer" resultMap="TakeResultMap">
+		SELECT tkid,rid,amount FROM take WHERE geid=#{geid} AND status IS NULL ;
+	</select>	 
+	
+	<select id="findById" parameterType="Integer" resultMap="TakeResultMap">
+		SELECT tkid,rid,amount FROM take WHERE tkid=#{tkid} ;
+	</select>	
+	
+	<update id="doUpdateStatus" parameterType="Take">
+		UPDATE take SET gdate=#{gdate},status=#{status} WHERE tkid=#{tkid}
+	</update>
+	
+	<update id="doUpdateAmountByEmp" parameterType="java.util.Map">
+		UPDATE take SET amount=#{amount} WHERE geid=#{geid} AND tkid=#{tkid} AND gdate IS NULL
+	</update>
+	
+	<update id="doUpdateSubmit" parameterType="Take">
+		UPDATE take SET status=#{status} WHERE tkid=#{tkid}
+	</update>
+	
+	<select id="findAllSplit" parameterType="java.util.Map" resultMap="TakeResultMap">
+		SELECT tkid,geid,beid,rid,gdate,rdate,amount,status
+		FROM take
+		WHERE status IS NOT NULL
+		<if test="keyWord != null">
+			AND ${column} LIKE #{keyWord}
+		</if>
+		LIMIT #{start},#{lineSize}
+	</select>
+	
+	<select id="getAllCount" parameterType="Integer" resultType="Integer">
+		SELECT COUNT(*) FROM take 
+		WHERE status IS NOT NULL 
+		<if test="keyWord != null">
+			AND ${column} LIKE #{keyWord}
+		</if>
+	</select> 
+	 
+	
+	<select id="findAllByEmp" parameterType="java.util.Map" resultMap="TakeResultMap">
+		SELECT tkid,geid,beid,rid,gdate,rdate,amount,status
+		FROM take
+		WHERE geid=#{geid} AND status IS NOT NULL
+		LIMIT #{start},#{lineSize}
+	</select>
+	
+	<select id="getAllCountByEmp" parameterType="Integer" resultType="Integer">
+		SELECT COUNT(*) FROM take WHERE geid=#{geid} AND status IS NOT NULL ;
+	</select>
+	
+	<delete id="doRemoveByEmp" parameterType="Integer">
+		DELETE FROM take 
+		<where>
+			tkid IN 
+			<foreach collection="array" open="(" close=")" separator="," item="ele">
+				#{ele}
+			</foreach>
+		</where>
+	</delete> 
+	
+	<update id="doUpdateStatus2" parameterType="java.util.Map">
+		UPDATE take
+		<set>
+			status=#{status} , 
+			<if test="rdate != null">
+				rdate=#{rdate} ,
+			</if>
+		</set> 
+		WHERE tkid=#{tkid} 
+	</update>
+	
+	<insert id="doCreate" parameterType="Take">
+		INSERT INTO take(geid,rid,amount) VALUES (#{geid},#{res.rid},#{amount}) ;
+	</insert>
+	<select id="findByResAndEmp" parameterType="java.util.Map" resultType="Integer">
+		SELECT tkid FROM take WHERE geid=#{eid} AND rid=#{rid} AND status IS NULL ;
+	</select>
+	<update id="doUpdateAmount" parameterType="java.util.Map">
+		UPDATE take SET amount=amount+#{amount} WHERE tkid=#{tkid}
+	</update>
+</mapper>
